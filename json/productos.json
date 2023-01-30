@@ -1,0 +1,29 @@
+{
+    "productos": [
+        {
+            "id": 1,
+            "nombre": "Monitor",
+            "precio": 123.12
+        },
+        {
+            "id": 2,
+            "nombre": "Portátil",
+            "precio": 1234.12
+        },
+        {
+            "id": 3,
+            "nombre": "Sobremesa",
+            "precio": 2345.12
+        },
+        {
+            "id": 4,
+            "nombre": "Ratón",
+            "precio": 12.34
+        },
+        {
+            "id": 5,
+            "nombre": "Teclado",
+            "precio": 23.45
+        }
+    ]
+}

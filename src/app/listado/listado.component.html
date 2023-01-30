@@ -12,10 +12,23 @@
       <td mat-cell *matCellDef="let row">{{row.nombre}}</td>
     </ng-container>
 
-    <!-- Nombre Column -->
+    <!-- Precio Column -->
     <ng-container matColumnDef="precio">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Precio</th>
       <td mat-cell *matCellDef="let row">{{row.precio}}</td>
+    </ng-container>
+
+    <!-- Opciones -->
+    <ng-container matColumnDef="opciones">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>OPCIONES</th>
+      <td mat-cell *matCellDef="let row">
+        <button mat-icon-button color="primary" aria-label="Editar registro" (click)="editar(row.id)">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" aria-label="Borrar registro" (click)="borrar(row.id)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -23,7 +36,7 @@
   </table>
 
   <mat-paginator #paginator
-      [length]="dataSource?.data?.length"
+      [length]="dataSource.data.length"
       [pageIndex]="0"
       [pageSize]="3"
       [pageSizeOptions]="[3, 6, 9]"

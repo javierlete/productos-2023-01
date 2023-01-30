@@ -2,7 +2,9 @@ import { DataSource } from '@angular/cdk/collections';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { map } from 'rxjs/operators';
-import { Observable, of as observableOf, merge } from 'rxjs';
+import { Observable, merge } from 'rxjs';
+import { ProductoService } from '../producto.service';
+import { Injectable } from '@angular/core';
 
 // TODO: Replace this with your own data model type
 export interface Producto {
@@ -11,27 +13,22 @@ export interface Producto {
   precio: number;
 }
 
-// TODO: replace this with real data from your application
-const MOCK_PRODUCTOS: Producto[] = [
-  {id: 1, nombre: 'Monitor', precio: 123.12},
-  {id: 2, nombre: 'Portátil', precio: 1234.12},
-  {id: 3, nombre: 'Sobremesa', precio: 2345.12},
-  {id: 4, nombre: 'Ratón', precio: 12.34},
-  {id: 5, nombre: 'Teclado', precio: 23.45},
-];
-
 /**
  * Data source for the Listado view. This class should
  * encapsulate all logic for fetching and manipulating the displayed data
  * (including sorting, pagination, and filtering).
  */
+@Injectable({
+  providedIn: 'root'
+})
 export class ListadoDataSource extends DataSource<Producto> {
-  data: Producto[] = MOCK_PRODUCTOS;
+  data: Producto[] = [];
   paginator: MatPaginator | undefined;
   sort: MatSort | undefined;
 
-  constructor() {
+  constructor(private productoService: ProductoService) {
     super();
+    this.productoService.getProductos().subscribe(data => this.data = data);
   }
 
   /**
@@ -43,7 +40,7 @@ export class ListadoDataSource extends DataSource<Producto> {
     if (this.paginator && this.sort) {
       // Combine everything that affects the rendered data into one update
       // stream for the data-table to consume.
-      return merge(observableOf(this.data), this.paginator.page, this.sort.sortChange)
+      return merge(this.productoService.getProductos(), this.paginator.page, this.sort.sortChange)
         .pipe(map(() => {
           return this.getPagedData(this.getSortedData([...this.data ]));
         }));
