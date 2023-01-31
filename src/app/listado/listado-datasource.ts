@@ -6,7 +6,6 @@ import { Observable, merge } from 'rxjs';
 import { ProductoService } from '../producto.service';
 import { Injectable } from '@angular/core';
 
-// TODO: Replace this with your own data model type
 export interface Producto {
   id: number;
   nombre: string;
@@ -28,6 +27,10 @@ export class ListadoDataSource extends DataSource<Producto> {
 
   constructor(private productoService: ProductoService) {
     super();
+    this.refrescar();
+  }
+
+  refrescar() {
     this.productoService.getProductos().subscribe(data => this.data = data);
   }
 

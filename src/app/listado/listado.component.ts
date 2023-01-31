@@ -4,6 +4,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTable } from '@angular/material/table';
 import { ActivatedRoute, Route, Router } from '@angular/router';
+import { ProductoService } from '../producto.service';
 import { ListadoDataSource, Producto } from './listado-datasource';
 
 @Component({
@@ -19,19 +20,31 @@ export class ListadoComponent implements AfterViewInit {
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
   displayedColumns = ['id', 'nombre', 'precio', 'opciones'];
 
-  constructor(public dataSource: ListadoDataSource, private route: Router) {}
+  dataSource!: ListadoDataSource;
+
+  constructor(
+    private router: Router,
+    private productoService: ProductoService) {
+      this.dataSource = new ListadoDataSource(this.productoService);
+  }
 
   ngAfterViewInit(): void {
+    this.dataSource = new ListadoDataSource(this.productoService);
+
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
     this.table.dataSource = this.dataSource;
   }
 
   editar(id: number) {
-    this.route.navigate(["/formulario/", id]);
+    this.router.navigate(["/formulario/", id]);
   }
 
   borrar(id: number) {
-    alert(id);
+    this.productoService.borrar(id).subscribe(() => {
+
+      this.ngAfterViewInit();
+    }
+    );
   }
 }

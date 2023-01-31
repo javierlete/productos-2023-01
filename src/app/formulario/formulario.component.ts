@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Producto } from '../listado/listado-datasource';
 import { ProductoService } from '../producto.service';
 
 @Component({
@@ -10,19 +11,40 @@ import { ProductoService } from '../producto.service';
 })
 export class FormularioComponent implements OnInit {
   productoForm = this.fb.group({
+    id: [0],
     nombre: ['', Validators.required],
     precio: [0, Validators.required],
   });
 
-  constructor(private fb: FormBuilder, private productoService: ProductoService, private route: ActivatedRoute) {}
+  constructor(
+    private fb: FormBuilder,
+    private productoService: ProductoService,
+    private route: ActivatedRoute,
+    private router: Router) { }
 
   ngOnInit() {
     const id: number = +this.route.snapshot.paramMap.get('id')!;
-    this.productoService.getProducto(id).subscribe(
-      producto => this.productoForm.patchValue(producto));
+    
+    if (id) {
+      this.productoService.getProducto(id).subscribe(
+        producto => this.productoForm.patchValue(producto));
+    }
   }
 
   guardar(): void {
-    alert('Thanks!');
+    const producto = this.productoForm.value;
+    if (producto.id) {
+      this.productoService.modificar(producto as Producto).subscribe(
+        () => this.irAListado()
+      );
+    } else {
+      this.productoService.insertar(producto as Producto).subscribe(
+        () => this.irAListado()
+      );
+    };
+  }
+
+  irAListado() {
+    this.router.navigate(["/listado"]);
   }
 }
